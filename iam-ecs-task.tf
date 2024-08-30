@@ -11,7 +11,8 @@ resource "aws_iam_role" "ecs_task" {
         "Service": [
           "ecs-tasks.amazonaws.com",
           "ssm.amazonaws.com"
-        ]
+        ],
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root""
       },
       "Effect": "Allow",
       "Sid": ""
@@ -93,6 +94,43 @@ resource "aws_iam_role_policy" "s3_policy" {
       "Resource": ["arn:aws:s3:::prod-${data.aws_region.current.name}-starport-layer-bucket/*"]
     }
   ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "ecr_policy" {
+  count = length(try(var.ecr_cache_repositories, [])) > 0 ? 1 : 0
+  name = "ecs-ecr-policy"
+  role = aws_iam_role.ecs_task.name
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowPullThroughCacheInECRAccount",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:BatchGetImage",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:CreateRepository",
+                "ecr:BatchImportUpstreamImage"
+            ],
+            "Resource": var.ecr_cache_repositories[
+                
+            ]
+        },
+        {
+            "Sid": "AllowLogin",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetAuthorizationToken"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
 }
 EOF
 }
