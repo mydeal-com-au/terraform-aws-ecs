@@ -116,9 +116,7 @@ resource "aws_iam_role_policy" "ecr_policy" {
                 "ecr:CreateRepository",
                 "ecr:BatchImportUpstreamImage"
             ],
-            "Resource": var.ecr_cache_repositories[
-                
-            ]
+            "Resource": [ ${join(", ", [ for repository in var.ecr_cache_repositories : "\"${repository}\"" ])} ]
         },
         {
             "Sid": "AllowLogin",
