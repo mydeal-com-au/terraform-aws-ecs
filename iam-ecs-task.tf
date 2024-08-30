@@ -12,7 +12,7 @@ resource "aws_iam_role" "ecs_task" {
           "ecs-tasks.amazonaws.com",
           "ssm.amazonaws.com"
         ],
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root""
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
       },
       "Effect": "Allow",
       "Sid": ""
