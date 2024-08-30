@@ -367,3 +367,10 @@ variable "container_insights" {
   default     = false
   description = "Enables CloudWatch Container Insights for a cluster."
 }
+
+variable "ecr_cache_repositories" {
+  description = "ECR cache repositories to support for pull through"
+  type        = list(string)
+  default     = []
+}
+
