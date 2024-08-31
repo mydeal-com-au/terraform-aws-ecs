@@ -5,15 +5,13 @@ data "aws_ami" "amzn" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-ecs-hvm*"]
+    values = ["al2023-ami-ecs-hvm*"]
   }
 
   filter {
     name   = "architecture"
     values = [var.architecture]
   }
-
-  name_regex = ".+-ebs$"
 }
 
 data "aws_subnet" "private_subnets" {
