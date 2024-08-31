@@ -20,48 +20,12 @@ resource "aws_iam_role" "ecs" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "ec2.amazonaws.com",
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        "Service": "ec2.amazonaws.com"
       },
       "Effect": "Allow",
       "Sid": ""
     }
   ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "ecr_policy" {
-  count = length(try(var.ecr_cache_repositories, [])) > 0 ? 1 : 0
-  name = "ecs-instance-ecr-policy"
-  role = aws_iam_role.ecs.name
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AllowPullThroughCacheInECRAccount",
-            "Effect": "Allow",
-            "Action": [
-                "ecr:BatchGetImage",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:CreateRepository",
-                "ecr:BatchImportUpstreamImage"
-            ],
-            "Resource": [ ${join(", ", [ for repository in var.ecr_cache_repositories : "\"${repository}\"" ])} ]
-        },
-        {
-            "Sid": "AllowLogin",
-            "Effect": "Allow",
-            "Action": [
-                "ecr:GetAuthorizationToken"
-            ],
-            "Resource": [
-                "*"
-            ]
-        }
-    ]
 }
 EOF
 }
