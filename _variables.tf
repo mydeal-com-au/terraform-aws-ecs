@@ -143,6 +143,11 @@ variable "asg_max" {
   description = "Max number of instances for autoscaling group."
 }
 
+variable "managed_scaling" {
+  default     = true
+  description = "(Optional) Enables managed scaling controlled by ECS for the EC2 launch type."
+}
+
 variable "asg_protect_from_scale_in" {
   default     = false
   description = "(Optional) Allows setting instance protection. The autoscaling group will not select instances with this setting for termination during scale in events."
