@@ -15,6 +15,11 @@ variable "ami_name_filter" {
   description = "AMI name filter to apply to get base image for EC2 hosts"
 }
 
+variable "ami_owner" {
+  default     = "amazon"
+  description = "AMI name owner filter to apply to get base image for EC2 hosts"
+}
+
 variable "architecture" {
   default     = "x86_64"
   description = "Architecture to select the AMI, x86_64 or arm64"
