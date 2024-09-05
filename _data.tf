@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 data "aws_ami" "amzn" {
   most_recent = true
-  owners      = ["amazon"]
+  owners      = [var.ami_owner]
 
   filter {
     name   = "name"
