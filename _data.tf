@@ -1,5 +1,7 @@
 data "aws_region" "current" {}
 data "aws_ami" "amzn" {
+  count       = var.fargate_only ? 0 : 1
+
   most_recent = true
   owners      = [var.ami_owner]
 
