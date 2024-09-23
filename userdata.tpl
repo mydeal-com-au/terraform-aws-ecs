@@ -17,15 +17,17 @@ echo "### INSTALL PACKAGES"
 yum update -y
 yum install -y amazon-efs-utils aws-cli
 
+if [ -z "${tf_efs_id}" ]; then
+  echo "### SETUP EFS"
 
-echo "### SETUP EFS"
-EFS_DIR=/mnt/efs
-EFS_ID=${tf_efs_id}
+  EFS_DIR=/mnt/efs
+  EFS_ID=${tf_efs_id}
 
-mkdir -p $${EFS_DIR}
-echo "$${EFS_ID}:/ $${EFS_DIR} efs tls,_netdev" >> /etc/fstab
+  mkdir -p $${EFS_DIR}
+  echo "$${EFS_ID}:/ $${EFS_DIR} efs tls,_netdev" >> /etc/fstab
 
-for i in $(seq 1 20); do mount -a -t efs defaults && break || sleep 60; done
+  for i in $(seq 1 20); do mount -a -t efs defaults && break || sleep 60; done
+fi
 
 echo "### SETUP AGENT"
 
