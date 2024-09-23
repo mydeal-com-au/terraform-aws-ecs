@@ -23,7 +23,7 @@ resource "aws_launch_template" "ecs" {
 
   user_data = base64encode(templatefile("${path.module}/userdata.tpl", {
     tf_cluster_name = var.name
-    tf_efs_id       = aws_efs_file_system.ecs[0].id
+    tf_efs_id       = var.create_efs ? aws_efs_file_system.ecs[0].id : ""
     userdata_extra  = var.userdata
   }))
 
