@@ -32,6 +32,51 @@ resource "aws_iam_role_policy_attachment" "ecs_task_ssm" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+resource "aws_iam_role_policy" "ecs_exec_policy" {
+  name = "ecs-ecs-exec-policy"
+  role = aws_iam_role.ecs_task.name
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ecs/${var.name}:*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:DescribeLogGroups"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssmmessages:CreateControlChannel",
+        "ssmmessages:CreateDataChannel",
+        "ssmmessages:OpenControlChannel",
+        "ssmmessages:OpenDataChannel"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role_policy" "ssm_policy" {
   name = "ecs-ssm-policy"
   role = aws_iam_role.ecs_task.name
@@ -59,18 +104,6 @@ resource "aws_iam_role_policy" "ssm_policy" {
       ],
       "Resource": [
         "arn:aws:ssm:*:*:parameter/*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ssmmessages:CreateControlChannel",
-        "ssmmessages:CreateDataChannel",
-        "ssmmessages:OpenControlChannel",
-        "ssmmessages:OpenDataChannel"
-      ],
-      "Resource": [
-        "*"
       ]
     }
   ]
