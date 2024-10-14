@@ -159,6 +159,11 @@ variable "managed_scaling" {
   description = "(Optional) Enables managed scaling controlled by ECS for the EC2 launch type."
 }
 
+variable "managed_termination_protection" {
+  default     = false
+  description = "(Optional) Enables or disables container-aware termination of instances in the auto scaling group when scale-in happens."
+}
+
 variable "asg_protect_from_scale_in" {
   default     = false
   description = "(Optional) Allows setting instance protection. The autoscaling group will not select instances with this setting for termination during scale in events."
