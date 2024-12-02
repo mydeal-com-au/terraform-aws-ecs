@@ -60,6 +60,7 @@ resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
       minimum_scaling_step_size = 1
       status                    = var.managed_scaling ? "ENABLED" : "DISABLED"
       target_capacity           = var.asg_target_capacity
+      instance_warmup_period    = var.instance_warmup_period
     }
   }
 }
