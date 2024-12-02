@@ -174,6 +174,12 @@ variable "asg_target_capacity" {
   description = "Target average capacity percentage for the ECS capacity provider to track for autoscaling."
 }
 
+variable "instance_warmup_period" {
+  default     = 180
+  type        = number
+  description = "Instance warm up period after a newly launched Amazon EC2 instance can contribute to CloudWatch metrics for Auto Scaling group."
+}
+
 variable "alarm_sns_topics" {
   default     = []
   description = "Alarm topics to create and alert on ECS instance metrics."
