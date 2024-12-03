@@ -39,6 +39,12 @@ resource "aws_autoscaling_group" "ecs" {
     propagate_at_launch = true
   }
 
+  tag {
+    key                 = "AmazonECSManaged"
+    value               = true
+    propagate_at_launch = true
+  }
+
   target_group_arns         = var.target_group_arns
   health_check_grace_period = var.autoscaling_health_check_grace_period
   default_cooldown          = var.autoscaling_default_cooldown
