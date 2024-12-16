@@ -24,6 +24,19 @@ resource "aws_autoscaling_group" "ecs" {
     }
   }
 
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = var.instance_refresh_config.min_healthy_percentage
+      max_healthy_percentage = var.instance_refresh_config.max_healthy_percentage
+      skip_matching = var.instance_refresh_config.skip_matching
+      instance_warmup = var.instance_refresh_config.instance_warmup
+      checkpoint_delay = var.instance_refresh_config.checkpoint_delay
+      checkpoint_percentages = var.instance_refresh_config.checkpoint_percentages
+    }
+    triggers = var.instance_refresh_config.triggers
+  }
+
   vpc_zone_identifier = var.private_subnet_ids
 
   min_size = var.asg_min
