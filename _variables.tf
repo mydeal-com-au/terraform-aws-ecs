@@ -401,3 +401,17 @@ variable "ecr_cache_repositories" {
   default     = []
 }
 
+variable "instance_refresh_config" {
+  description = "Cluster ASG Instance refresh settings"
+  type = object({
+    min_healthy_percentage      = optional(number, 90)
+    max_healthy_percentage      = optional(number, 200)
+    skip_matching               = optional(bool, true)
+    instance_warmup             = optional(number, 180)
+    checkpoint_delay            = optional(number, 120)
+    checkpoint_percentages      = optional(list(number), [ 30, 60 ])
+    triggers                    = optional(list(string), [ "tag" ])
+  })
+
+  default = {}
+} 
