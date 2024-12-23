@@ -401,6 +401,11 @@ variable "ecr_cache_repositories" {
   default     = []
 }
 
+variable "enable_auto_instance_refresh" {
+  description = "Enable cluster ASG auto instance refresh"
+  type = bool
+  default = false  
+}
 variable "instance_refresh_config" {
   description = "Cluster ASG Instance refresh settings"
   type = object({
