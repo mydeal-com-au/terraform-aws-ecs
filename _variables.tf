@@ -404,7 +404,7 @@ variable "ecr_cache_repositories" {
 variable "instance_refresh_config" {
   description = "Cluster ASG Instance refresh settings"
   type = object({
-    min_healthy_percentage      = optional(number, 90)
+    min_healthy_percentage      = optional(number, 100)
     max_healthy_percentage      = optional(number, 200)
     skip_matching               = optional(bool, true)
     instance_warmup             = optional(number, 180)
