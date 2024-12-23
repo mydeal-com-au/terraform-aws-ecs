@@ -6,7 +6,7 @@ resource "aws_autoscaling_group" "ecs" {
     launch_template {
       launch_template_specification {
         launch_template_id = aws_launch_template.ecs[0].id
-        version            = aws_launch_template.ecs[0].latest_version
+        version            = var.enable_auto_instance_refresh ? aws_launch_template.ecs[0].latest_version : "$Latest"
       }
 
       dynamic "override" {
