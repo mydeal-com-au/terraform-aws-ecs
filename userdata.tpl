@@ -10,6 +10,8 @@ echo "ulimit -u unlimited" >> /etc/rc.local
 echo "ulimit -n 1048576" >> /etc/rc.local
 echo "vm.max_map_count=262144" >> /etc/sysctl.conf
 echo "fs.file-max=65536" >> /etc/sysctl.conf
+echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+echo "fs.inotify.max_user_instances=512" >> /etc/sysctl.conf
 /sbin/sysctl -p /etc/sysctl.conf
 
 
