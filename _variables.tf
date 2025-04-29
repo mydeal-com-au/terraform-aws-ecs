@@ -414,7 +414,7 @@ variable "instance_refresh_config" {
     skip_matching               = optional(bool, true)
     instance_warmup             = optional(number, 180)
     checkpoint_delay            = optional(number, 120)
-    checkpoint_percentages      = optional(list(number), [ 30, 60 ])
+    checkpoint_percentages      = optional(list(number), [ 30, 60, 100 ])
     triggers                    = optional(list(string), [ "tag" ])
   })
 
