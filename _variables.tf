@@ -420,3 +420,8 @@ variable "instance_refresh_config" {
 
   default = {}
 } 
+
+variable "allow_datadog_traffic" {
+  default     = false
+  description = "Allow containers to communicate with Datadog agent running on ECS nodes"
+}

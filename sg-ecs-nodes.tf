@@ -54,6 +54,28 @@ resource "aws_security_group_rule" "all_from_ecs_nodes_to_ecs_nodes" {
   source_security_group_id = aws_security_group.ecs_nodes.id
 }
 
+resource "aws_security_group_rule" "containers_to_datadog_agent_tcp" {
+  count = var.allow_datadog_traffic ? 1 : 0
+  description              = "TCP Traffic from containers to Datadog agent"
+  type                     = "ingress"
+  from_port                = 8126
+  to_port                  = 8126
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_nodes.id
+  cidr_blocks              = data.aws_subnet.private_subnets[*].cidr_block
+}
+
+resource "aws_security_group_rule" "containers_to_datadog_agent_udp" {
+  count = var.allow_datadog_traffic ? 1 : 0
+  description              = "UDP Traffic from containers to Datadog agent"
+  type                     = "ingress"
+  from_port                = 8125
+  to_port                  = 8125
+  protocol                 = "udp"
+  security_group_id        = aws_security_group.ecs_nodes.id
+  cidr_blocks              = data.aws_subnet.private_subnets[*].cidr_block
+}
+
 resource "aws_security_group_rule" "all_from_ecs_nodes_outbound" {
   count             = length(var.security_group_ecs_nodes_outbound_cidrs)
   description       = "Traffic to outbound cidr ${var.security_group_ecs_nodes_outbound_cidrs[count.index]}"
