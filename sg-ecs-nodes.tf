@@ -55,6 +55,7 @@ resource "aws_security_group_rule" "all_from_ecs_nodes_to_ecs_nodes" {
 }
 
 resource "aws_security_group_rule" "containers_to_datadog_agent_tcp" {
+  count = var.allow_datadog_traffic ? 1 : 0
   description              = "TCP Traffic from containers to Datadog agent"
   type                     = "ingress"
   from_port                = 8126
@@ -65,6 +66,7 @@ resource "aws_security_group_rule" "containers_to_datadog_agent_tcp" {
 }
 
 resource "aws_security_group_rule" "containers_to_datadog_agent_udp" {
+  count = var.allow_datadog_traffic ? 1 : 0
   description              = "UDP Traffic from containers to Datadog agent"
   type                     = "ingress"
   from_port                = 8125
