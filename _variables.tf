@@ -425,3 +425,9 @@ variable "allow_datadog_traffic" {
   default     = false
   description = "Allow containers to communicate with Datadog agent running on ECS nodes"
 }
+
+variable "capacity_providers" {
+  type = list(string)
+  default = []
+  description = "List of capacity providers to be associated with the cluster"
+}
