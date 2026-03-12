@@ -25,9 +25,9 @@ resource "aws_ecs_cluster_capacity_providers" "ecs" {
       }  
   }
 
-  capacity_providers = compact([
+  capacity_providers = concat(compact([
     try(aws_ecs_capacity_provider.ecs_capacity_provider[0].name, ""),
     "FARGATE",
     "FARGATE_SPOT"
-  ])
+  ]), var.capacity_providers)
 }
