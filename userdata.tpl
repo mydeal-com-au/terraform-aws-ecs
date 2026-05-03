@@ -14,11 +14,6 @@ echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 echo "fs.inotify.max_user_instances=512" >> /etc/sysctl.conf
 /sbin/sysctl -p /etc/sysctl.conf
 
-
-echo "### INSTALL PACKAGES"
-yum update -y
-yum install -y amazon-efs-utils aws-cli
-
 echo "### SETUP AGENT"
 
 echo "ECS_CLUSTER=${tf_cluster_name}" >> /etc/ecs/ecs.config
