@@ -36,14 +36,14 @@ resource "aws_launch_template" "ecs" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      env = var.env
+      env = var.account_name
     }
   }
 
   tag_specifications {
     resource_type = "volume"
     tags = {
-      env = var.env
+      env = var.account_name
     }
   }
 }

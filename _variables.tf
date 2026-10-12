@@ -4,8 +4,8 @@ variable "name" {
   description = "Name of this ECS cluster."
 }
 
-variable "env" {
-  description = "Target environment for the ECS cluster."
+variable "account_name" {
+  description = "Target environment account name for the ECS cluster."
 }
 
 variable "instance_types" {
