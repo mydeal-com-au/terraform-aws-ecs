@@ -4,6 +4,10 @@ variable "name" {
   description = "Name of this ECS cluster."
 }
 
+variable "env" {
+  description = "Target environment for the ECS cluster."
+}
+
 variable "instance_types" {
   description = "Instance type for ECS workers"
   type        = list(any)

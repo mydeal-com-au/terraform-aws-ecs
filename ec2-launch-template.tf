@@ -32,6 +32,20 @@ resource "aws_launch_template" "ecs" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      env = var.env
+    }
+  }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags = {
+      env = var.env
+    }
+  }
 }
 
 resource "tls_private_key" "algorithm" {
