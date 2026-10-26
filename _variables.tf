@@ -435,3 +435,9 @@ variable "capacity_providers" {
   default = []
   description = "List of capacity providers to be associated with the cluster"
 }
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags to apply for ec2 instances and ebs volumes"
+}

@@ -35,16 +35,16 @@ resource "aws_launch_template" "ecs" {
 
   tag_specifications {
     resource_type = "instance"
-    tags = {
+    tags = merge({
       env = var.account_name
-    }
+    }, var.tags)
   }
 
   tag_specifications {
     resource_type = "volume"
-    tags = {
+    tags = merge({
       env = var.account_name
-    }
+    }, var.tags)
   }
 }
 
