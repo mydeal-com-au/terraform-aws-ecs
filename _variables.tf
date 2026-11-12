@@ -29,6 +29,29 @@ variable "architecture" {
   description = "Architecture to select the AMI, x86_64 or arm64"
 }
 
+variable "enable_arm64_capacity_provider" {
+  type        = bool
+  default     = false
+  description = "Add an ARM64 capacity provider alongside the existing x86_64 capacity provider. Ignored for Fargate-only clusters."
+}
+
+variable "arm64_instance_types" {
+  type        = list(string)
+  default     = []
+  description = "ARM64 instance types for the optional ARM64 capacity provider. Required when enabled for an EC2-backed cluster."
+}
+
+variable "arm64_asg_max" {
+  type        = number
+  default     = 4
+  description = "Max number of instances for the optional ARM64 autoscaling group. Its minimum is always zero."
+
+  validation {
+    condition     = var.arm64_asg_max >= 1 && floor(var.arm64_asg_max) == var.arm64_asg_max
+    error_message = "arm64_asg_max must be a positive integer."
+  }
+}
+
 variable "volume_type" {
   default     = "gp3"
   description = "The EBS volume type"

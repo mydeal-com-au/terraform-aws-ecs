@@ -17,3 +17,23 @@ resource "aws_autoscaling_schedule" "ecs_start" {
   autoscaling_group_name = aws_autoscaling_group.ecs[0].name
   recurrence             = var.schedule_cron_start
 }
+
+resource "aws_autoscaling_schedule" "arm64_stop" {
+  count                  = local.arm64_enabled && var.enable_schedule ? 1 : 0
+  scheduled_action_name  = "ecs-${var.name}-arm64-stop"
+  min_size               = 0
+  max_size               = 0
+  desired_capacity       = 0
+  autoscaling_group_name = aws_autoscaling_group.arm64[0].name
+  recurrence             = var.schedule_cron_stop
+}
+
+resource "aws_autoscaling_schedule" "arm64_start" {
+  count                  = local.arm64_enabled && var.enable_schedule ? 1 : 0
+  scheduled_action_name  = "ecs-${var.name}-arm64-start"
+  min_size               = 0
+  max_size               = var.arm64_asg_max
+  desired_capacity       = 0
+  autoscaling_group_name = aws_autoscaling_group.arm64[0].name
+  recurrence             = var.schedule_cron_start
+}
