@@ -70,6 +70,11 @@ output "ecs_name" {
   value = aws_ecs_cluster.ecs.name
 }
 
+output "arm64_capacity_provider_name" {
+  description = "ARM64 capacity provider name for service capacity provider strategies, or an empty string when disabled."
+  value       = try(aws_ecs_capacity_provider.arm64[0].name, "")
+}
+
 output "alb_listener_https_arn" {
   value = aws_lb_listener.ecs_https.*.arn
 }

@@ -41,6 +41,51 @@ module "ecs_apps" {
 }
 ```
 
+### Optional ARM64 capacity provider
+
+The existing capacity provider and cluster default strategy are unchanged. To add
+an ARM64 capacity provider alongside an x86_64 provider, set:
+
+```hcl
+enable_arm64_capacity_provider = true
+arm64_instance_types           = ["t4g.medium"]
+arm64_asg_max                  = 4
+```
+
+These settings can also be supplied per cluster through the platform workspace
+configuration. The feature defaults to disabled and creates no ARM64 resources
+for Fargate-only clusters. Existing resource names and Terraform addresses are
+preserved.
+
+When using the platform's Git module source, publish the module changes to that
+source and refresh the downloaded module with `terraform init -upgrade` before
+planning the platform changes.
+
+The ARM64 AMI uses the same `ami_owner` and `ami_name_filter`, with architecture
+`arm64`. Supply ARM64-compatible instance types and ensure custom userdata supports
+both architectures. The existing provider must use `architecture = "x86_64"`.
+
+The additional ASG has minimum capacity `0` and a separate maximum (default `4`).
+Other ASG and managed-scaling settings are shared with the existing provider,
+including instance refresh, optional shutdown schedules and CPU alarms. Scheduled
+startup restores the ARM64 maximum while keeping its minimum and desired capacity
+at zero. Managed scaling can launch instances for demand; a zero minimum does not
+guarantee zero running instances.
+
+ARM64 services must explicitly select the provider named
+`<cluster-name>-arm64-capacity-provider` (also exposed as
+`arm64_capacity_provider_name`) in their capacity provider strategy with a
+nonzero weight. Use an ARM64-compatible image and task definition
+`runtime_platform.cpu_architecture = "ARM64"`. Existing services continue to use
+the original cluster default.
+
+Regression tests use mocked providers and require Terraform 1.7 or later:
+
+```shell
+terraform init -backend=false
+terraform test -filter=tests/arm64.tftest.hcl
+```
+
 <!--- BEGIN_TF_DOCS --->
 
 ## Requirements
@@ -82,6 +127,8 @@ module "ecs_apps" {
 | alb\_sg\_allow\_test\_listener | Whether to allow world access to the test listeners | `bool` | `true` | no |
 | alb\_ssl\_policy | The name of the SSL Policy for the listener. Required if protocol is HTTPS or TLS. | `string` | `"ELBSecurityPolicy-2016-08"` | no |
 | architecture | Architecture to select the AMI, x86\_64 or arm64 | `string` | `"x86_64"` | no |
+| arm64\_asg\_max | Maximum ARM64 ASG capacity; minimum is always zero. | `number` | `4` | no |
+| arm64\_instance\_types | ARM64 instance types, required when enabled for an EC2-backed cluster. | `list(string)` | `[]` | no |
 | asg\_capacity\_rebalance | Indicates whether capacity rebalance is enabled | `bool` | `false` | no |
 | asg\_max | Max number of instances for autoscaling group. | `number` | `4` | no |
 | asg\_min | Min number of instances for autoscaling group. | `number` | `1` | no |
@@ -101,6 +148,7 @@ module "ecs_apps" {
 | efs\_lifecycle\_transition\_to\_ia | Option to enable EFS Lifecycle Transaction to IA | `string` | `""` | no |
 | efs\_lifecycle\_transition\_to\_primary\_storage\_class | Option to enable EFS Lifecycle Transaction to Primary Storage Class | `bool` | `false` | no |
 | enable\_schedule | Enables schedule to shut down and start up instances outside business hours. | `bool` | `false` | no |
+| enable\_arm64\_capacity\_provider | Add an ARM64 capacity provider alongside the existing x86_64 provider. Ignored for Fargate-only clusters. | `bool` | `false` | no |
 | extra\_certificate\_arns | Extra ACM certificates to add to ALB Listeners | `list(string)` | `[]` | no |
 | extra\_task\_policies\_arn | Extra policies to add to the task definition permissions | `list(string)` | `[]` | no |
 | fargate\_only | Enable when cluster is only for fargate and does not require ASG/EC2/EFS infrastructure | `bool` | `false` | no |
@@ -148,6 +196,7 @@ module "ecs_apps" {
 | alb\_listener\_test\_traffic\_arn | n/a |
 | alb\_secgrp\_id | n/a |
 | alb\_zone\_id | n/a |
+| arm64\_capacity\_provider\_name | ARM64 capacity provider name, or an empty string when disabled. |
 | ecs\_arn | n/a |
 | ecs\_codedeploy\_iam\_role\_arn | n/a |
 | ecs\_iam\_role\_arn | n/a |
